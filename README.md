@@ -6,7 +6,7 @@ Desenvolvido para fins de estudo.
 
 Tecnologias utilizadas:
 
-FrontEnd: React + Bootstrap
+FrontEnd: React + TypeScript + Bootstrap
 
 https://react-bootstrap.netlify.app/
 
