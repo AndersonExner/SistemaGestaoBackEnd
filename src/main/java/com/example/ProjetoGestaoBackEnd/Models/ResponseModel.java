@@ -10,6 +10,7 @@ import lombok.Setter;
 @Setter
 public class ResponseModel {
     
+    private Boolean success;
     private String message;
 
 }

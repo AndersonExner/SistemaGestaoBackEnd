@@ -1,5 +1,7 @@
 package com.example.ProjetoGestaoBackEnd.Service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,34 +24,50 @@ public class FuncionarioService {
         return funcionarioRepository.findAll();
     }
 
-    public ResponseEntity<ResponseModel> cadastrar(FuncionarioModel model){
+    public ResponseEntity<ResponseModel> cadastrar(FuncionarioModel funcionario){
+        try {
 
-        if(model.getNome().equals("")){
-            response.setMessage("Nome Obrigatório");
-            return new ResponseEntity<ResponseModel>(response, HttpStatus.BAD_REQUEST);
+            if (!validarCPF(funcionario.getCpf())) {
+                response.setSuccess(false);
+                response.setMessage("CPF já cadastrado");
+                return new ResponseEntity<ResponseModel>(response, HttpStatus.BAD_REQUEST);
+            }
+
+            FuncionarioModel novoFuncionario = funcionarioRepository.save(funcionario);
+
+            if(novoFuncionario != null){
+                response.setSuccess(true);
+                response.setMessage("Cadastrado com Sucesso");
+            }else{
+                response.setSuccess(false);
+                response.setMessage("Ocorreu um Erro");
+            }
+
+        } catch (Exception error) {
+            response.setSuccess(false);
+            response.setMessage(error.toString());
         }
 
-        if(model.getCargo().equals("")){
-            response.setMessage("Cargo Obrigatório");
-            return new ResponseEntity<ResponseModel>(response, HttpStatus.BAD_REQUEST);
-        }
-
-        FuncionarioModel novoFuncionario = funcionarioRepository.save(model);
-
-        if(novoFuncionario != null){
-            response.setMessage("Cadastrado com Sucesso");
-        }else{
-            response.setMessage("Ocorreu um Erro");
-        }
 
         return new ResponseEntity<ResponseModel>(response, HttpStatus.CREATED);
     }
 
     public ResponseEntity<ResponseModel> remover(Long id){
         funcionarioRepository.deleteById(id);
-
+        response.setSuccess(true);
         response.setMessage("Usuário Removido Com Sucesso");
 
         return new ResponseEntity<ResponseModel>(response, HttpStatus.OK);
     }
+
+    private boolean validarCPF(String cpf) {
+        List<FuncionarioModel> list = funcionarioRepository.findByCpf(cpf); 
+
+        if(!list.isEmpty()) {
+            return false;
+        }
+
+        return true;
+    }
+
 }

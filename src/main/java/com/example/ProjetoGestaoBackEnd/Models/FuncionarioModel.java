@@ -25,11 +25,11 @@ public class FuncionarioModel {
     private Long id;
     private String nome;
     private String email;
-    private int telefone;
+    private String senha;
+    private String telefone;
     private String cargo;
-    private float salario;
-    private int cpf;
-    private int rg;
+    private String salario;
+    private String cpf;
     private String endereco;
 
     @CreationTimestamp
